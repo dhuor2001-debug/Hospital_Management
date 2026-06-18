@@ -1,0 +1,62 @@
+{
+  "patients": [
+    {
+      "id": "P-1021",
+      "name": "Amina Paul",
+      "age": 42,
+      "gender": "Female",
+      "condition": "Chest pain",
+      "priority": "Critical",
+      "ward": "ICU",
+      "doctor": "Dr. Meera Sen",
+      "vitals": { "bp": "150/95", "spo2": 90, "temp": 100.8, "pulse": 118 },
+      "bill": 18400,
+      "status": "Admitted",
+      "createdAt": "2026-06-18T08:00:00.000Z"
+    },
+    {
+      "id": "P-1022",
+      "name": "Rahul Kumar",
+      "age": 29,
+      "gender": "Male",
+      "condition": "Fracture",
+      "priority": "Stable",
+      "ward": "Ortho",
+      "doctor": "Dr. Arjun Rao",
+      "vitals": { "bp": "121/80", "spo2": 98, "temp": 98.4, "pulse": 82 },
+      "bill": 7200,
+      "status": "Observation",
+      "createdAt": "2026-06-18T08:20:00.000Z"
+    },
+    {
+      "id": "P-1023",
+      "name": "Sofia James",
+      "age": 66,
+      "gender": "Female",
+      "condition": "Diabetes review",
+      "priority": "Watch",
+      "ward": "General",
+      "doctor": "Dr. Nisha Roy",
+      "vitals": { "bp": "135/88", "spo2": 95, "temp": 99.2, "pulse": 96 },
+      "bill": 4300,
+      "status": "Admitted",
+      "createdAt": "2026-06-18T08:40:00.000Z"
+    }
+  ],
+  "appointments": [
+    { "id": "A-501", "patient": "Amina Paul", "doctor": "Dr. Meera Sen", "time": "09:30", "type": "Emergency", "status": "Queued" },
+    { "id": "A-502", "patient": "Rahul Kumar", "doctor": "Dr. Arjun Rao", "time": "11:15", "type": "X-Ray", "status": "Confirmed" },
+    { "id": "A-503", "patient": "Sofia James", "doctor": "Dr. Nisha Roy", "time": "14:00", "type": "Follow-up", "status": "Confirmed" }
+  ],
+  "beds": [
+    { "ward": "ICU", "total": 12, "occupied": 10 },
+    { "ward": "General", "total": 48, "occupied": 31 },
+    { "ward": "Ortho", "total": 18, "occupied": 13 },
+    { "ward": "Pediatrics", "total": 16, "occupied": 8 }
+  ],
+  "ambulances": [
+    { "id": "AMB-01", "driver": "K. Das", "status": "On route", "eta": 8 },
+    { "id": "AMB-02", "driver": "M. Ali", "status": "Available", "eta": 0 },
+    { "id": "AMB-03", "driver": "R. Soren", "status": "Maintenance", "eta": null }
+  ]
+}

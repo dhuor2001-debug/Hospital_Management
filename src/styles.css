@@ -112,6 +112,28 @@ nav button.active {
   gap: 20px;
 }
 
+.topbar-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.api-status {
+  background: #fff4d8;
+  border-radius: 999px;
+  color: #8a5900;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 8px 10px;
+}
+
+.api-status.online {
+  background: #e4f8ed;
+  color: #127342;
+}
+
 .topbar h2 {
   font-size: 28px;
 }
@@ -213,7 +235,7 @@ nav button.active {
   border-radius: 8px;
   display: grid;
   gap: 12px;
-  grid-template-columns: 1.4fr 1fr 0.6fr auto;
+  grid-template-columns: 1.4fr 1fr 0.6fr auto auto;
   padding: 14px;
 }
 
@@ -241,6 +263,23 @@ nav button.active {
 .priority.stable {
   background: #e4f8ed;
   color: #127342;
+}
+
+.row-action {
+  background: #ffffff;
+  border: 1px solid #cbd8e4;
+  border-radius: 8px;
+  color: #123044;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 8px 10px;
+}
+
+.row-action:disabled,
+form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 form {

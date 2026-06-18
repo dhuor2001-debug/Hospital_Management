@@ -1,6 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
 const seed = {
   patients: [
@@ -75,6 +77,8 @@ function loadData() {
 function App() {
   const [data, setData] = useState(loadData);
   const [activeRole, setActiveRole] = useState("Admin");
+  const [apiStatus, setApiStatus] = useState("Connecting to API...");
+  const [isSaving, setIsSaving] = useState(false);
   const [patientForm, setPatientForm] = useState({
     name: "",
     age: "",
@@ -84,31 +88,96 @@ function App() {
     doctor: "Dr. Meera Sen",
   });
 
-  function persist(next) {
+  function persistLocal(next) {
     setData(next);
     localStorage.setItem("careflow-data", JSON.stringify(next));
   }
 
-  function addPatient(event) {
+  async function loadDashboard() {
+    try {
+      const response = await fetch(`${API_URL}/dashboard`);
+      if (!response.ok) throw new Error("Dashboard request failed");
+      const dashboard = await response.json();
+      persistLocal(dashboard);
+      setApiStatus("Backend connected");
+    } catch {
+      setApiStatus("Offline demo mode");
+    }
+  }
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  async function addPatient(event) {
     event.preventDefault();
     if (!patientForm.name.trim() || !patientForm.condition.trim()) return;
 
-    const nextPatient = {
-      id: `P-${Math.floor(1000 + Math.random() * 9000)}`,
-      name: patientForm.name.trim(),
-      age: Number(patientForm.age || 0),
-      gender: "Not set",
-      condition: patientForm.condition.trim(),
-      priority: patientForm.priority,
-      ward: patientForm.ward,
-      doctor: patientForm.doctor,
-      vitals: { bp: "Pending", spo2: 0, temp: 0, pulse: 0 },
-      bill: 0,
-      status: "New",
-    };
+    setIsSaving(true);
+    try {
+      const response = await fetch(`${API_URL}/patients`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patientForm),
+      });
+      if (!response.ok) throw new Error("Patient creation failed");
+      await loadDashboard();
+      setPatientForm({ name: "", age: "", condition: "", priority: "Stable", ward: "General", doctor: "Dr. Meera Sen" });
+    } catch {
+      const nextPatient = {
+        id: `P-${Math.floor(1000 + Math.random() * 9000)}`,
+        name: patientForm.name.trim(),
+        age: Number(patientForm.age || 0),
+        gender: "Not set",
+        condition: patientForm.condition.trim(),
+        priority: patientForm.priority,
+        ward: patientForm.ward,
+        doctor: patientForm.doctor,
+        vitals: { bp: "Pending", spo2: 0, temp: 0, pulse: 0 },
+        bill: 0,
+        status: "New",
+      };
 
-    persist({ ...data, patients: [nextPatient, ...data.patients] });
-    setPatientForm({ name: "", age: "", condition: "", priority: "Stable", ward: "General", doctor: "Dr. Meera Sen" });
+      persistLocal({ ...data, patients: [nextPatient, ...data.patients] });
+      setApiStatus("Offline demo mode");
+      setPatientForm({ name: "", age: "", condition: "", priority: "Stable", ward: "General", doctor: "Dr. Meera Sen" });
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function dischargePatient(patientId) {
+    try {
+      const response = await fetch(`${API_URL}/patients/${patientId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Discharged" }),
+      });
+      if (!response.ok) throw new Error("Discharge failed");
+      await loadDashboard();
+    } catch {
+      const next = {
+        ...data,
+        patients: data.patients.map((patient) => (
+          patient.id === patientId ? { ...patient, status: "Discharged" } : patient
+        )),
+      };
+      persistLocal(next);
+      setApiStatus("Offline demo mode");
+    }
+  }
+
+  async function resetDemoData() {
+    try {
+      const response = await fetch(`${API_URL}/reset`, { method: "POST" });
+      if (!response.ok) throw new Error("Reset failed");
+      const dashboard = await response.json();
+      persistLocal(dashboard);
+      setApiStatus("Backend connected");
+    } catch {
+      persistLocal(seed);
+      setApiStatus("Offline demo mode");
+    }
   }
 
   const insights = useMemo(() => {
@@ -154,7 +223,10 @@ function App() {
             <p className="eyebrow">{activeRole} workspace</p>
             <h2>Today&apos;s hospital operations</h2>
           </div>
-          <button className="ghost" onClick={() => persist(seed)}>Reset demo data</button>
+          <div className="topbar-actions">
+            <span className={apiStatus === "Backend connected" ? "api-status online" : "api-status"}>{apiStatus}</span>
+            <button className="ghost" onClick={resetDemoData}>Reset demo data</button>
+          </div>
         </header>
 
         <section className="stats-grid">
@@ -183,6 +255,9 @@ function App() {
                   <div>{patient.doctor}</div>
                   <div>{patient.ward}</div>
                   <div className={`priority ${patient.priority.toLowerCase()}`}>{patient.priority}</div>
+                  <button className="row-action" onClick={() => dischargePatient(patient.id)} disabled={patient.status === "Discharged"}>
+                    {patient.status === "Discharged" ? "Discharged" : "Discharge"}
+                  </button>
                 </article>
               ))}
             </div>
@@ -202,7 +277,7 @@ function App() {
             <select value={patientForm.ward} onChange={(event) => setPatientForm({ ...patientForm, ward: event.target.value })}>
               {data.beds.map((bed) => <option key={bed.ward}>{bed.ward}</option>)}
             </select>
-            <button type="submit">Create intake record</button>
+            <button type="submit" disabled={isSaving}>{isSaving ? "Saving..." : "Create intake record"}</button>
           </form>
         </section>
 

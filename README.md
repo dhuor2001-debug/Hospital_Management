@@ -39,9 +39,19 @@ The reference project is a React hospital dashboard with separate areas for:
 - React
 - Vite
 - CSS
-- Browser local storage
+- Node.js HTTP API
+- JSON file persistence
+- Browser local storage fallback
 
 ## Run locally
+
+Run the backend in one terminal:
+
+```bash
+npm run backend
+```
+
+Run the frontend in another terminal:
 
 ```bash
 npm install
@@ -50,11 +60,28 @@ npm run dev
 
 Then open the local URL printed by Vite.
 
+The frontend expects the API at `http://localhost:4000/api`. You can override it with:
+
+```bash
+VITE_API_URL=http://localhost:4000/api npm run dev
+```
+
+## Backend API
+
+- `GET /api/health` - API health check.
+- `GET /api/dashboard` - patients, appointments, beds, ambulances, and computed insights.
+- `GET /api/patients` - patient list.
+- `POST /api/patients` - create a patient intake record.
+- `PATCH /api/patients/:id/status` - update patient status, including discharge.
+- `GET /api/appointments` - appointment list.
+- `GET /api/beds` - bed occupancy by ward.
+- `GET /api/ambulances` - ambulance status and ETA.
+- `POST /api/reset` - restore seed demo data.
+
 ## Future backend upgrades
 
 This frontend is ready to connect to a backend later. Good next steps:
 
-- Node/Express or Django REST API.
 - MongoDB/PostgreSQL patient records.
 - Authentication with role-based access.
 - PDF discharge summaries and invoices.
