@@ -1,4 +1,46 @@
 {
+  "users": [
+    {
+      "id": "U-ADMIN",
+      "name": "Hospital Admin",
+      "username": "admin",
+      "password": "admin123",
+      "role": "Admin",
+      "department": "Operations",
+      "status": "Active",
+      "createdAt": "2026-06-18T08:00:00.000Z"
+    },
+    {
+      "id": "U-DOCTOR",
+      "name": "Dr. Meera Sen",
+      "username": "doctor",
+      "password": "doctor123",
+      "role": "Doctor",
+      "department": "Cardiology",
+      "status": "Active",
+      "createdAt": "2026-06-18T08:00:00.000Z"
+    },
+    {
+      "id": "U-NURSE",
+      "name": "Nurse Anita Rao",
+      "username": "nurse",
+      "password": "nurse123",
+      "role": "Nurse",
+      "department": "Patient Intake",
+      "status": "Active",
+      "createdAt": "2026-06-18T08:00:00.000Z"
+    },
+    {
+      "id": "U-EMERGENCY",
+      "name": "Emergency Desk",
+      "username": "emergency",
+      "password": "emergency123",
+      "role": "Emergency",
+      "department": "Ambulance and Triage",
+      "status": "Active",
+      "createdAt": "2026-06-18T08:00:00.000Z"
+    }
+  ],
   "patients": [
     {
       "id": "P-1021",
@@ -63,25 +105,31 @@
       "id": "A-501",
       "patient": "Amina Paul",
       "doctor": "Dr. Meera Sen",
+      "date": "2026-06-18",
       "time": "09:30",
       "type": "Emergency",
-      "status": "Queued"
+      "status": "Queued",
+      "notes": "Chest pain triage"
     },
     {
       "id": "A-502",
       "patient": "Rahul Kumar",
       "doctor": "Dr. Arjun Rao",
+      "date": "2026-06-18",
       "time": "11:15",
       "type": "X-Ray",
-      "status": "Confirmed"
+      "status": "Confirmed",
+      "notes": "Fracture imaging"
     },
     {
       "id": "A-503",
       "patient": "Sofia James",
       "doctor": "Dr. Nisha Roy",
+      "date": "2026-06-18",
       "time": "14:00",
       "type": "Follow-up",
-      "status": "Confirmed"
+      "status": "Confirmed",
+      "notes": "Diabetes review"
     }
   ],
   "beds": [

@@ -25,11 +25,12 @@ The reference project is a React hospital dashboard with separate areas for:
 ## What is new in this version
 
 - Live hospital command dashboard.
-- Role switcher for Admin, Doctor, Nurse, and Emergency views.
+- Separate login spaces for Admin, Doctor, Nurse, and Emergency teams.
+- Admin staff/category management for adding and deleting role accounts.
 - Smart triage queue that highlights the highest-risk patient.
 - Bed occupancy pressure by ward.
 - Ambulance availability and ETA tracking.
-- Appointment overview.
+- Appointment booking, status updates, and admin deletion.
 - Nurse intake form for adding new patients.
 - Local-first persistence using `localStorage`, so demo data survives page refresh.
 - Clean responsive UI for laptop and mobile screens.
@@ -66,14 +67,32 @@ The frontend expects the API at `http://localhost:4000/api`. You can override it
 VITE_API_URL=http://localhost:4000/api npm run dev
 ```
 
+## Demo logins
+
+| Space | Username | Password |
+| --- | --- | --- |
+| Admin | `admin` | `admin123` |
+| Doctor | `doctor` | `doctor123` |
+| Nurse | `nurse` | `nurse123` |
+| Emergency | `emergency` | `emergency123` |
+
+Admin can create and delete staff accounts for all categories: Admin, Doctor, Nurse, and Emergency.
+
 ## Backend API
 
 - `GET /api/health` - API health check.
+- `POST /api/login` - role-based login.
 - `GET /api/dashboard` - patients, appointments, beds, ambulances, and computed insights.
+- `GET /api/users` - staff accounts without passwords.
+- `POST /api/users` - admin staff/category creation.
+- `DELETE /api/users/:id` - delete a staff account.
 - `GET /api/patients` - patient list.
 - `POST /api/patients` - create a patient intake record.
 - `PATCH /api/patients/:id/status` - update patient status, including discharge.
 - `GET /api/appointments` - appointment list.
+- `POST /api/appointments` - book an appointment.
+- `PATCH /api/appointments/:id` - update appointment details or status.
+- `DELETE /api/appointments/:id` - delete an appointment.
 - `GET /api/beds` - bed occupancy by ward.
 - `GET /api/ambulances` - ambulance status and ETA.
 - `POST /api/reset` - restore seed demo data.
